@@ -63,7 +63,6 @@ class LoginController extends Controller
             ],
             [
                 'email' => $userSocialite->getEmail(),
-                'uuid' => Str::uuid(),
                 'name' => $userSocialite->getName(),
                 'avatar_url' => $userSocialite->getAvatar(),
                 'email_verified_at' => null,
