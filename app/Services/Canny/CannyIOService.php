@@ -10,7 +10,7 @@ class CannyIOService
 
     public function __construct()
     {
-        $this->cannyPrivateKey = "72a3f085-598e-54e7-f210-7282792444e7"; //config('settings.canny_io.private_key');
+        $this->cannyPrivateKey = config('canny.private_key');
     }
 
     public function generateToken($userId,$userEmail, $userName, $avatarUrl = null ){
@@ -23,5 +23,10 @@ class CannyIOService
         ];
 
        return JWT::encode($userData, $this->cannyPrivateKey, "HS256");
+    }
+
+    public function redirectURI($companyID, $ssoToken, $redirectUrl): string
+    {
+        return  "https://canny.io/api/redirects/sso?companyID=".$companyID."&ssoToken=".$ssoToken."&redirect=".$redirectUrl;
     }
 }

@@ -99,7 +99,7 @@ class LoginController extends Controller
             $redirectUrl    = $queryString->redirect;
             $companyID      = $queryString->companyID;
 
-            $cannyUrl = "https://canny.io/api/redirects/sso?companyID=".$companyID."&ssoToken=".$ssoToken."&redirect=".$redirectUrl;
+            $cannyUrl = $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
             return redirect($cannyUrl);
         }
 
@@ -111,5 +111,7 @@ class LoginController extends Controller
         Auth::logout();
         return redirect('/');
     }
+
+
 
 }
