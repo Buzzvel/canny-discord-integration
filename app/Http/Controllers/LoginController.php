@@ -6,9 +6,8 @@ use App\Models\User;
 use App\Services\Canny\CannyIOService;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
@@ -101,9 +100,25 @@ class LoginController extends Controller
         $redirectUrl    = $queryString->redirect;
         $companyID      = $queryString->companyID;
 
-        $r =  $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
+        $url =   $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
 
-        dd($r);
+        Log::info("------------------------------------------");
+        Log::info("------------------------------------------");
+        Log::info("User");
+        Log::info(json_encode($user));
+        Log::info("------------------------------------------");
+        Log::info("Query String");
+        Log::info(json_encode($queryString));
+        Log::info("------------------------------------------");
+        Log::info("SSO Token");
+        Log::info($ssoToken);
+        Log::info("------------------------------------------");
+        Log::info("URL");
+        Log::info($url);
+        Log::info("------------------------------------------");
+        Log::info("------------------------------------------");
+        Log::info("");
+
     }
 
 

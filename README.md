@@ -1,4 +1,7 @@
 ## Discord + Canny Integration in Laravel 8
+This project is a demo to test Discord Integration and connection with Canny SSO Redirect.
+
+**Demo URL:** [https://canny-discord.buzzvel.work](https://canny-discord.buzzvel.work/)
 
 ### Packages required
 
@@ -14,8 +17,11 @@
 - Use **[ngrok](https://ngrok.com/)** to test connection.  
 - Canny SSO Redirect URL need to have your full url with login path. 
 
-
 **Example:** http://discordcanny.io/login
+
+### Troubleshooting
+https://developers.canny.io/install/widget/sso
+https://discord.com/developers/applications/
 
 
 If you need help please send message to _hello(at)buzzvel.com_
