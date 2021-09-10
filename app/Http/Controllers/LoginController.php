@@ -119,6 +119,7 @@ class LoginController extends Controller
         Log::info("------------------------------------------");
         Log::info("");
 
+        return $url;
     }
 
 
