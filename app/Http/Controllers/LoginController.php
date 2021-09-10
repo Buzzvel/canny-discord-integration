@@ -16,7 +16,6 @@ class LoginController extends Controller
     /**
      * Redirect the user to the Provider authentication page.
      *
-     * @return JsonResponse
      */
     public function redirect(Request  $request)
     {
@@ -25,49 +24,36 @@ class LoginController extends Controller
         $redirect = $request->query('redirect');
 
         $state = null;
-        $user = null;
 
         if($redirect){
             $queryString = $request->query();
             if(auth()->check()){
-                $user = \auth()->user();
-
-                $cannyService = new CannyIOService();
-                $ssoToken       = $cannyService->generateToken($user->id, $user->email, $user->name, $user->avatar_url);
-                $redirectUrl    = $queryString->redirect;
-                $companyID      = $queryString->companyID;
-
-                $cannyUrl = "https://canny.io/api/redirects/sso?companyID=".$companyID."&ssoToken=".$ssoToken."&redirect=".$redirectUrl;
-                return redirect($cannyUrl);
+                $user = auth()->user();
+                return redirect($this->redirectToCannyUrl($user, $queryString));
             }
-            $state = base64_encode(json_encode($queryString));
+            $queryString = json_encode($queryString); // Convert to json to be able to encode
+            $state       = base64_encode($queryString); // Encode to protect the content
         }
         if(auth()->check()) {
             return  redirect('/dashboard');
         }
 
 
-            $url =  Socialite::driver('discord')
-            ->with(['state' =>$state])
-            ->setScopes(['identify', 'email', 'guilds.join'])
-            ->stateless()->redirect()->getTargetUrl();
+        $url =  Socialite::driver('discord')
+        ->with(['state' =>$state])
+        ->setScopes(['identify', 'email', 'guilds.join'])
+        ->stateless()->redirect()->getTargetUrl();
 
         return redirect($url);
 
     }
 
-    /**
-     * Obtain the user information from Provider.
-     * @param  UserRepository  $userRepository
-     * @return JsonResponse
-     */
     public function callback(Request $request)
     {
         try {
             $userSocialite = Socialite::driver("discord")->stateless()->user();
 
         } catch (ClientException $exception) {
-
             return  redirect('/')->with(['status' => "Problem login with Discord. Please try again."]);
         }
 
@@ -91,16 +77,13 @@ class LoginController extends Controller
 
         // Here we will receive the query string that we need to get token
         $state = $request->get('state');
-        $queryString = null;
-        if($state){
-            $queryString = json_decode(base64_decode($state));
-            $cannyService = new CannyIOService();
-            $ssoToken       = $cannyService->generateToken($user->id, $user->email, $user->name, $user->avatar_url);
-            $redirectUrl    = $queryString->redirect;
-            $companyID      = $queryString->companyID;
 
-            $cannyUrl = $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
-            return redirect($cannyUrl);
+        if($state){
+
+            $queryString = base64_decode($state); // Decodify the state (queryString)
+            $queryString = json_decode($queryString); // Query String Object
+
+            return redirect($this->redirectToCannyUrl($user, $queryString));
         }
 
         return redirect('/dashboard');
@@ -110,6 +93,16 @@ class LoginController extends Controller
     {
         Auth::logout();
         return redirect('/');
+    }
+
+    private function redirectToCannyUrl($user, $queryString): string
+    {
+        $cannyService   = new CannyIOService();
+        $ssoToken       = $cannyService->generateToken($user->id, $user->email, $user->name, $user->avatar_url);
+        $redirectUrl    = $queryString->redirect;
+        $companyID      = $queryString->companyID;
+
+        return $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
     }
 
 
