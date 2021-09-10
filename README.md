@@ -20,8 +20,14 @@ This project is a demo to test Discord Integration and connection with Canny SSO
 **Example:** http://discordcanny.io/login
 
 ### Troubleshooting
-https://developers.canny.io/install/widget/sso
-https://discord.com/developers/applications/
+- https://developers.canny.io/install/widget/sso
+- https://discord.com/developers/applications/
 
 
 If you need help please send message to _hello(at)buzzvel.com_
+
+----
+
+**Buzzvel - Custom Development Focused on Your Success**. 
+
+https://buzzvel.com
