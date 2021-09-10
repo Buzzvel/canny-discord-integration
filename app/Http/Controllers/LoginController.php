@@ -29,7 +29,7 @@ class LoginController extends Controller
             $queryString = $request->query();
             if(auth()->check()){
                 $user = auth()->user();
-                return redirect($this->redirectToCannyUrl($user, $queryString));
+                return redirect($this->redirectToCannyUrl($user, (object) $queryString));
             }
             $queryString = json_encode($queryString); // Convert to json to be able to encode
             $state       = base64_encode($queryString); // Encode to protect the content
@@ -101,7 +101,9 @@ class LoginController extends Controller
         $redirectUrl    = $queryString->redirect;
         $companyID      = $queryString->companyID;
 
-        return $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
+        $r =  $cannyService->redirectURI($companyID, $ssoToken, $redirectUrl);
+
+        dd($r);
     }
 
 
